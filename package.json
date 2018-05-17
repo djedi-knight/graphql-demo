@@ -1,0 +1,19 @@
+{
+  "name": "graphql-demo",
+  "version": "1.0.0",
+  "description": "Demo application for GraphQL",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/djedi-knight/graphql-demo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/djedi-knight/graphql-demo/issues"
+  },
+  "homepage": "https://github.com/djedi-knight/graphql-demo#readme"
+}
