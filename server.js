@@ -31,8 +31,9 @@ var schema = buildSchema(`
     random: Float!
     rollThreeDice: [Int]
     rollDice(numDice: Int!, numSides: Int): [Int]
-    getDie(numSides: Int): RandomDie,
+    getDie(numSides: Int): RandomDie
     getMessage(id: ID!): Message
+    ip: String
   }
 `);
 
@@ -66,6 +67,12 @@ class Message {
 
 // Create the database
 var fakeDatabase = {};
+
+// Express middleware
+function loggingMiddleware(req, res, next) {
+  console.log('ip:', req.ip);
+  next();
+}
 
 // The root provides a resolver function for each API endpoint
 var root = {
@@ -108,10 +115,14 @@ var root = {
     // This replaces all old data, but some apps might want partial update.
     fakeDatabase[id] = input;
     return new Message(id, input);
+  },
+  ip: (args, request) => {
+    return request.ip;
   }
 };
 
 var app = express();
+app.use(loggingMiddleware);
 app.use('/graphql', graphqlHTTP({
   schema: schema,
   rootValue: root,
@@ -120,3 +131,33 @@ app.use('/graphql', graphqlHTTP({
 app.listen(4000);
 
 console.log('Running a GraphQL API server at localhost:4000/graphql');
+
+// Use the following to test the application:
+
+// {
+//   quoteOfTheDay,
+//   random,
+//   rollThreeDice,
+//   rollDice(numDice: 4, numSides: 	100),
+//   getDie(numSides: 3) {
+//     rollOnce
+//     roll(numRolls: 3)
+//   },
+//   ip
+// }
+
+// mutation {
+//   createMessage(input: {
+//     author: "andy",
+//     content: "hope is a good thing",
+//   }) {
+//     id
+//   }
+// }
+
+// {
+//   getMessage(id: "0cb2749dadd20a7749de") {
+//     author,
+//     content
+//   }
+// }
